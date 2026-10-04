@@ -1,0 +1,18 @@
+M1 — Mate in One Studio
+
+Serve this folder with a static HTTP server. For example, from this folder:
+  python -m http.server 5188 --bind 127.0.0.1
+Then open http://127.0.0.1:5188
+
+Do not open index.html with file://; the browser needs HTTP for engine and generator workers.
+
+All engine, piece, board and font assets are bundled. No account or backend is required.
+Google Sans font source: https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&display=swap
+Stockfish.js 19 Lite source: https://github.com/nmrugg/stockfish.js/tree/v19.0.0
+Engine license: engine/LICENSE.txt
+Board and piece attribution: LICHESS-COPYING.md
+
+The Elo slider is a structural difficulty estimate. Puzzles are generated compositions,
+with M1 and M2 modes. M1 has one mating move; M2 has one forcing first move and a
+finishing mate after every legal defense. Both modes are verified by Stockfish. Storage remembers
+previous puzzles, settings and session progress.

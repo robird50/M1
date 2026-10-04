@@ -1,0 +1,1 @@
+{"name":"m1-studio","version":"1.0.0","private":true,"type":"module","scripts":{"dev":"vite --host 127.0.0.1 --port 5188","build":"vite build","preview":"vite preview --host 127.0.0.1 --port 5188","test":"node test.mjs"},"dependencies":{"chess.js":"1.4.0","stockfish":"19.0.0","vite":"^6.1.0"}}

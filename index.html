@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#f6f5f0"><title>M1 — One move. All it takes.</title><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/font.css"><link rel="stylesheet" href="/style.css"></head>
+<body>
+<div class="app">
+  <header><a class="brand" href="./" aria-label="M1 home"><span class="brand-symbol">m<span>1</span><i></i></span><span class="brand-name">MATE IN ONE<span>THE PUZZLE STUDIO</span></span></a><div class="header-right"><span class="engine-pill"><i id="engineDot"></i><span id="engineStatus">Loading engine</span></span><button class="icon-button" id="sound" title="Toggle sound" aria-label="Toggle sound" aria-pressed="true"></button></div></header>
+  <main>
+    <section class="intro"><div><div class="eyebrow"><span></span> SMALL PUZZLE. BIG SATISFACTION.</div><h1>One move.<br> <em>All it takes.</em></h1><p>Find the finishing move. A fresh challenge,<br class="desktop-break"> made just for your level.</p></div><div class="intro-note"><span class="spark">✳</span><p>A little focus.<br>A beautiful finish.</p><span class="note-line"></span></div></section>
+    <section class="play-layout">
+      <div class="board-column">
+        <div class="board-heading"><div><span class="turn-dot" id="turnDot"></span><strong id="turnLabel">Preparing your puzzle</strong></div><span class="puzzle-number" id="puzzleNumber">M1 / 001</span></div>
+        <div class="board-shell"><div class="board" id="board" role="grid" aria-label="Chess puzzle board"></div><div id="boardOverlay" class="board-overlay"><span class="spinner"></span><strong id="loadingLabel">Warming up Stockfish…</strong><span id="loadingDetail">Your first puzzle is on its way</span></div></div>
+        <div class="board-toolbar"><span class="drag-tip" id="dragTip"></span><div><button class="icon-button" id="flip" title="Flip board" aria-label="Flip board"></button><button class="icon-button" id="copy" title="Copy position as FEN" aria-label="Copy position as FEN"></button></div></div>
+        <div class="feedback" id="feedback" role="status" aria-live="polite"><span class="feedback-icon">↗</span><div><strong id="feedbackTitle">Look for the final move.</strong><p id="feedbackText">Drag a piece to deliver checkmate.</p></div><span id="timer">00:00</span></div>
+        <div class="puzzle-actions"><button id="hint" class="text-button"></button><button id="reveal" class="text-button">Show solution <span>↗</span></button></div>
+      </div>
+      <aside>
+        <div class="settings-card"><div class="card-kicker">YOUR NEXT CHALLENGE <span>01</span></div><h2>Make it your move.</h2><p class="card-description">Dial in your difficulty. We’ll find the mate.</p>
+          <div class="mate-mode"><label for="mateLength">Mate length</label><div class="mate-mode-control"><span id="modeOne">M1</span><input id="mateLength" type="range" min="1" max="2" step="1" value="1" aria-label="Mate length" aria-valuetext="Mate in one"><span id="modeTwo">M2</span></div><p id="mateLengthNote">Find checkmate in one move.</p></div>
+          <div class="difficulty-heading"><label for="elo">Difficulty</label><span class="level-badge" id="levelBadge">Intermediate</span></div><div class="elo-display"><span id="eloValue">1400</span><span>estimated Elo</span></div>
+          <input id="elo" type="range" min="600" max="2600" step="100" value="1400" aria-describedby="difficultyNote"><div class="range-labels"><span>600 · Gentle</span><span>2600 · Tricky</span></div><p id="difficultyNote" class="difficulty-note">More possibilities. One perfect finish.</p>
+          <div class="divider"></div><label class="setting-label">Play as</label><div class="segmented" role="group" aria-label="Side to play"><button data-side="random" class="active" aria-pressed="true">Either side</button><button data-side="w" aria-pressed="false"><span class="mini-piece white"></span> White</button><button data-side="b" aria-pressed="false"><span class="mini-piece black"></span> Black</button></div>
+          <div class="motion-setting"><div><strong>Piece motion</strong><span>A little swing with every drag</span></div><button id="motion" class="toggle on" role="switch" aria-checked="true" aria-label="Piece motion"><span></span></button></div>
+          <button class="generate" id="generate"><span id="generateIcon"></span><span id="generateText">Generate puzzle</span><span class="arrow">↗</span></button><div class="verified"><span>✓</span> Unique position. One winning move.</div>
+        </div>
+        <div class="session-card"><div class="session-title">A little progress, every day.<span>↗</span></div><div class="stats"><div><strong id="solvedCount">0</strong><span>Solved</span></div><div><strong id="streakCount">0</strong><span>Current streak</span></div><div><strong id="bestTime">—</strong><span>Best time</span></div></div><div class="session-foot"><span class="tiny-dot"></span> Your session, saved on this device</div></div>
+        <div class="how-it-works"><span class="how-icon">♧</span><p><strong>Just one move.</strong> No opponent, no clock to beat. Take your time and find the checkmate.</p></div>
+      </aside>
+    </section>
+  </main>
+  <footer><span>CRAFTED FOR YOUR NEXT AHA MOMENT.</span><a href="#" id="credits">Stockfish 19 Lite · Lichess assets <span>↗</span></a></footer>
+</div>
+<dialog id="creditsDialog"><button id="closeCredits" class="dialog-close" aria-label="Close credits">×</button><div class="eyebrow">THE DETAILS</div><h2>Open chess. Beautiful pieces.</h2><p>Engine: <a href="https://github.com/nmrugg/stockfish.js/tree/v19.0.0" target="_blank" rel="noopener">Stockfish.js 19 Lite</a> (GPLv3), running locally in a Web Worker. <a href="/engine/LICENSE.txt">License</a>.</p><p>Original brown board by the Lichess authors and pirouetti (AGPLv3+). Cburnett pieces by Colin M. L. Burnett (GPLv2+), from <a href="https://github.com/lichess-org/lila" target="_blank" rel="noopener">Lichess</a>. <a href="/LICHESS-COPYING.md">Asset licenses</a>.</p><p>Typeface: Google Sans, served by Google Fonts and bundled locally.</p><p>Puzzles are generated compositions. The Elo slider is an estimate based on material, competing checks and mating-piece complexity, rather than a measured player rating. M1 puzzles have exactly one legal mating move. M2 puzzles have exactly one forcing first move, with a finishing mate after every legal defense. Both modes are verified by Stockfish.</p></dialog>
+<script type="module" src="/app.js"></script>
+</body></html>
