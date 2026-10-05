@@ -183,8 +183,9 @@ $('board').onpointerup=async e=>{
   try{
     await land(ghost,to||from,size);
     if(to&&to!==from){
+      ghost.remove();
       const accepted=await tryMove(from,to);
-      if(!accepted){document.querySelector(`[data-square="${from}"]`)?.classList.add('drag-origin');await land(ghost,from,size,false);}
+      if(!accepted){document.body.append(ghost);document.querySelector(`[data-square="${from}"]`)?.classList.add('drag-origin');await land(ghost,from,size,false);}
       else document.querySelector(`[data-square="${to}"]`)?.classList.add('drag-origin');
     }
   }finally{ghost.remove();settling=false;selected=null;render();}
@@ -211,8 +212,39 @@ async function tryMove(from,to,promotion){
     $('turnLabel').textContent=`Checkmate · M${puzzle.mateIn||1} solved`;
     if(!assisted){stats.solved++;stats.streak=mistakes?0:stats.streak+1;stats.best=stats.best===null?elapsed:Math.min(stats.best,elapsed);}else stats.streak=0;
     updateStats();feedback(`${move.san} · Beautiful finish.`,assisted?'Checkmate found with a hint. Ready for another?':`Checkmate in ${puzzle.mateIn===2?'two':'one'}. Solved in ${elapsed}s.`,'success');playSound();
-  }else{const explanation=explainNotMate(game,move);game.undo();mistakes++;stats.streak=0;updateStats();feedback(explanation.title,explanation.text,'error');}
+  }else{
+    const explanation=explainNotMate(game,move);
+    mistakes++;stats.streak=0;updateStats();feedback(explanation.title,explanation.text,'error');
+    if((puzzle.mateIn||1)===1&&game.isCheck()&&explanation.reply){
+      await previewEscape(move,explanation);return true;
+    }
+    game.undo();
+  }
   selected=null;hinted=false;render();clock();return finished;
+}
+async function animateReply(reply){
+  const piece=game.get(reply.from),origin=document.querySelector(`[data-square="${reply.from}"]`),r=origin.getBoundingClientRect();
+  const ghost=document.createElement('img');ghost.className='drag-ghost';ghost.src=`/pieces/${piece.color}${piece.type.toUpperCase()}.svg`;ghost.style.width=r.width+'px';ghost.style.height=r.width+'px';ghost.style.transform=`translate(${r.x}px,${r.y}px) scale(.88)`;document.body.append(ghost);origin.classList.add('drag-origin');
+  try{await land(ghost,reply.to,r.width,false);game.move(reply);lastMove=[reply.from,reply.to];render();}
+  finally{ghost.remove();}
+}
+async function previewEscape(attempt,explanation){
+  const previousLastMove=lastMove;
+  opponentThinking=true;selected=null;hinted=false;lastMove=[attempt.from,attempt.to];
+  for(const id of ['generate','hint','reveal','flip','copy'])$(id).disabled=true;
+  $('turnLabel').textContent='Watch the opponent escape check';render();
+  try{
+    await new Promise(resolve=>setTimeout(resolve,450));
+    await animateReply(explanation.reply);
+    feedback(explanation.title,explanation.text+' Watch the defense — your puzzle resets in 3 seconds.','error');
+    await new Promise(resolve=>setTimeout(resolve,3000));
+  }finally{
+    game=new Chess(puzzle.fen);lastMove=previousLastMove;opponentThinking=false;
+    for(const id of ['generate','hint','reveal','flip','copy'])$(id).disabled=false;
+    $('turnLabel').textContent=`${game.turn()==='w'?'White':'Black'} to move · mate in 1`;
+    $('turnDot').classList.toggle('black',game.turn()==='b');
+    feedback(explanation.title,explanation.text+' Original position restored. Try another move.','error');render();clock();
+  }
 }
 async function playDefense(){
   const branch=puzzle.branches.slice().sort((a,b)=>a.mates.length-b.mates.length)[0];

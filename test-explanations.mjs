@@ -12,7 +12,7 @@ for(const [name,fen,san,expected] of cases){
   const chess=new Chess(fen),explanation=explainNotMate(chess,{san});
   assert.equal(chess.fen(),fen,'Explanation must not alter the position');
   assert((explanation.title+' '+explanation.text).includes(expected),name);
-  if(explanation.reply){assert(chess.moves().includes(explanation.reply.san));chess.move(explanation.reply);assert(!chess.isCheckmate(),'Reply must escape mate');}
+  if(explanation.reply){assert(chess.moves().includes(explanation.reply.san));chess.move(explanation.reply);assert(!chess.isCheckmate(),'Reply must escape mate');assert(!chess.isCheck(),'Displayed defense must leave the king out of check');}
   console.log(name+': '+explanation.title+' '+explanation.text);
 }
 console.log('PASS: capture, king escape, blocking, no check, and stalemate explanations.');
