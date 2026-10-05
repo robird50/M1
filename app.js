@@ -223,10 +223,21 @@ async function tryMove(from,to,promotion){
   selected=null;hinted=false;render();clock();return finished;
 }
 async function animateReply(reply){
-  const piece=game.get(reply.from),origin=document.querySelector(`[data-square="${reply.from}"]`),r=origin.getBoundingClientRect();
-  const ghost=document.createElement('img');ghost.className='drag-ghost';ghost.src=`/pieces/${piece.color}${piece.type.toUpperCase()}.svg`;ghost.style.width=r.width+'px';ghost.style.height=r.width+'px';ghost.style.transform=`translate(${r.x}px,${r.y}px) scale(.88)`;document.body.append(ghost);origin.classList.add('drag-origin');
-  try{await land(ghost,reply.to,r.width,false);game.move(reply);lastMove=[reply.from,reply.to];render();}
-  finally{ghost.remove();}
+  const origin=document.querySelector(`[data-square="${reply.from}"]`);
+  const destination=document.querySelector(`[data-square="${reply.to}"]`);
+  const piece=origin.querySelector('.piece');
+  // Animate the already loaded board image so the defense stays visible throughout.
+  await piece.decode().catch(()=>{});
+  const from=origin.getBoundingClientRect(),to=destination.getBoundingClientRect();
+  origin.style.zIndex='4';
+  const animation=piece.animate([
+    {transform:'translate(0px,0px)'},
+    {transform:`translate(${to.x-from.x}px,${to.y-from.y}px)`}
+  ],{duration:reduced.matches?120:650,easing:'cubic-bezier(.4,0,.2,1)',fill:'forwards'});
+  try{
+    await animation.finished;
+    game.move(reply);lastMove=[reply.from,reply.to];render();
+  }finally{animation.cancel();origin.style.zIndex='';}
 }
 async function previewEscape(attempt,explanation){
   const previousLastMove=lastMove;
